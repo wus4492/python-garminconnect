@@ -1,8 +1,7 @@
 name: Garmin Sync
-
 on:
   schedule:
-    - cron: '0 21 * * *' # 每天凌晨自動執行
+    - cron: '0 21 * * *' # UTC 21:00 = 台灣早上 5:00
   workflow_dispatch: # 允許手動點擊執行
 
 jobs:
@@ -10,12 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
-          python-python: '3.10'
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install gspread google-auth garminconnect
 
       - name: Run Sync Script
         env:
@@ -23,6 +25,4 @@ jobs:
           GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
           GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
-        run: |
-          pip install gspread google-auth garminconnect
-          python demo.py
+        run: python demo.py
