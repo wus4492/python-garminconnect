@@ -37,4 +37,3 @@ sheet = gc.open_by_key(os.environ["SPREADSHEET_ID"]).sheet1
 sheet.append_row([yesterday, steps, sleep_hours, resting_hr, calories])
 print(f"已寫入 {yesterday}：步數 {steps}、睡眠 {sleep_hours} 小時")
 
-run: python sync.py
